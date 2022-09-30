@@ -1,0 +1,59 @@
+call plug#begin('~/.vim/plugged')
+
+" Intent line
+Plug 'Yggdroot/indentLine'
+
+"Fugitive Vim Github Wrapper
+Plug 'tpope/vim-fugitive'
+
+" Git blame
+Plug 'zivyangll/git-blame.vim'
+
+" File manage
+Plug 'scrooloose/nerdtree'
+
+" Commenter
+Plug 'scrooloose/nerdcommenter'
+
+
+" Search text
+Plug 'jremmen/vim-ripgrep'
+
+" Search in files
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" IncSearch with Fuzzy
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
+
+" Auto complete
+Plug 'neoclide/coc.nvim', {'branch': 'release'} 
+Plug 'kevinoid/vim-jsonc'
+
+"Vim scheme
+Plug 'vv9k/vim-github-dark'
+Plug 'atelierbram/Base2Tone-vim'
+Plug 'joshdick/onedark.vim'
+Plug 'zefei/cake16'
+Plug 'sainnhe/everforest'
+Plug 'morhetz/gruvbox'
+
+"Undo tree
+Plug 'mbbill/undotree'
+
+"Status line
+Plug 'vim-airline/vim-airline'
+
+"Surround
+Plug 'tpope/vim-surround'
+
+" C++ systax
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+" Switch buffer
+Plug 'ton/vim-bufsurf'
+
+" Repeat plugin
+Plug 'tpope/vim-repeat'
+call plug#end()
