@@ -25,4 +25,6 @@ brew install --cask iterm2
 brew install --cask visual-studio-code
 brew install --cask postman
 brew install --cask docker
-brew install --cask virtualbox
+
+# Unsupport m1 mac
+#brew install --cask virtualbox

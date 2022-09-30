@@ -38,6 +38,7 @@ command -v brew >/dev/null 2>&1 || /bin/bash -c "$(curl -fsSL https://raw.github
 
 #-------------Install brew----------
 printf "\nInstall brew packages ...\n"
+eval $(/opt/homebrew/bin/brew shellenv)
 bash .brew/brew.sh || { echo "Install brew packages failed"; exit 1; }
 bash .brew/cask.sh || { echo "Install brew cask failed"; exit 1; }
 
