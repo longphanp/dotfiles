@@ -11,7 +11,7 @@ brew install zsh
 brew install bash
 
 # Update editor
-brew install vim && brew link vim --force
+brew install macvim
 
 # better `top`
 brew install glances
