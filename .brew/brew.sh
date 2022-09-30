@@ -6,10 +6,6 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade
 
-# Update shell
-brew install zsh
-brew install bash
-
 # Update editor
 brew install macvim
 
