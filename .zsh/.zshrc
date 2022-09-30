@@ -1,28 +1,6 @@
 setopt PROMPT_SUBST
 autoload -U colors && colors # Enable colors
 
-#-------------- Custom prompt ----------------
-# current directory, two levels deep
-directory() {
-   echo "%0~"
-}
-
-# set the git_prompt_status text
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[cyan]%} added%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%} unmerged%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[magenta]%} untracked%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[yellow]%} behind%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[green]%} ahead%{$reset_color%}"
-
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[cyan]%}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[red]%}"
-
-PROMPT='$(directory) $(git_prompt_info) $ '
-RPROMPT='$(git_prompt_status)'
-
-#---------------------------------------------
-
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
 
@@ -49,7 +27,49 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+#-------------- Custom prompt ----------------
+# current directory, two levels deep
+directory() {
+   echo "%B$fg[blue]%0~$reset_color"
+}
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+function git_prompt_info() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+
+  # Checks if working tree is dirty
+  local STATUS=''
+  local FLAGS
+  FLAGS=('--porcelain')
+  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
+    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
+      FLAGS+='--ignore-submodules=dirty'
+    fi
+    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
+      FLAGS+='--untracked-files=no'
+    fi
+    STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
+  fi
+
+  if [[ -n $STATUS ]]; then
+    GIT_PROMPT_COLOR="$ZSH_THEME_GIT_PROMPT_DIRTY"
+    GIT_DIRTY_STAR="*"
+  else
+    GIT_PROMPT_COLOR="$ZSH_THEME_GIT_PROMPT_CLEAN"
+    unset GIT_DIRTY_STAR
+  fi
+
+  echo "$GIT_PROMPT_COLOR$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$GIT_DIRTY_STAR$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+# set the git_prompt_status text
+ZSH_THEME_GIT_PROMPT_ADDED="$fg[cyan] added$reset_color"
+ZSH_THEME_GIT_PROMPT_UNMERGED="$fg[red] unmerged$reset_color"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="$fg[magenta] untracked$reset_color"
+ZSH_THEME_GIT_PROMPT_BEHIND="$fg[yellow] behind$reset_color"
+ZSH_THEME_GIT_PROMPT_AHEAD="$fg[green] ahead$reset_color"
+
+ZSH_THEME_GIT_PROMPT_SUFFIX="$reset_color"
+ZSH_THEME_GIT_PROMPT_CLEAN="$fg[cyan]"
+ZSH_THEME_GIT_PROMPT_CLEAN="$fg[red]"
+
+PROMPT='$(directory) $(git_prompt_info) $ '
+#---------------------------------------------

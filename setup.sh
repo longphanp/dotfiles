@@ -70,10 +70,8 @@ vim -E +PlugInstall +qall || true
 
 # Install vim coc extensions
 printf "\nInstalling Vim Coc Extensions...\n"
-extensions="coc-snippets coc-prettier coc-html coc-eslint coc-emmet coc-diagnostic coc-yaml coc-tsserver coc-sql coc-sh coc-pyright coc-json coc-docker coc-css coc-cmake"
-
-vim -E +CocInstall $extensions +qall
-
+COC_EXTENSION_DIR=$HOME/.config/coc/extensions
+(cp ./.vim/coc/package.json "$COC_EXTENSION_DIR" && cd "$COC_EXTENSION_DIR" && yarn install)
 
 #-------------Change to zsh----------------
 # change shell to zsh
