@@ -1,5 +1,8 @@
 #!/bin/env bash
 
+#-----------Install Rosetta--------
+sudo softwareupdate --install-rosetta
+
 #-----------Install xcode------------
 printf "\nInstall xcode ...\n"
 
@@ -75,3 +78,6 @@ vim -E +CocInstall $extensions +qall
 # change shell to zsh
 chsh -s "$(command -v zsh)" || { echo "Failed to switch to zsh"; exit 1; }
 source "$HOME/.zprofile"
+
+# Config macos
+sh .macos
