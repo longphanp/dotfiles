@@ -101,7 +101,7 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad ActuateDetents -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool false
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -bool 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -bool false
 defaults write -g com.apple.trackpad.scaling 2
 
 #-------Keyboard-------
