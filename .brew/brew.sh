@@ -22,8 +22,9 @@ brew install fzf
 # Dev tools
 brew install git
 brew install curl
-brew install python@3.8
 brew install node
+brew install yarn
+brew install aws
 brew install llvm
 brew install tmux
 brew install sops
