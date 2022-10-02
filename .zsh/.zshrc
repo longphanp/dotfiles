@@ -28,9 +28,21 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 #-------------- Custom prompt ----------------
+# set the git_prompt_status text
+ZSH_THEME_GIT_PROMPT_ADDED="%F{cyan} added%f"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%F{red} unmerged%f"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{magenta} untracked%f"
+ZSH_THEME_GIT_PROMPT_BEHIND="%F{yellow} behind%f"
+ZSH_THEME_GIT_PROMPT_AHEAD="$fg[green] ahead$reset_color"
+
+ZSH_THEME_GIT_PROMPT_PREFIX="("
+ZSH_THEME_GIT_PROMPT_SUFFIX=")%f"
+ZSH_THEME_GIT_PROMPT_CLEAN="%F{cyan}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%F{red}"
+
 # current directory, two levels deep
 directory() {
-   echo "%B$fg[blue]%0~$reset_color"
+   echo "%B%F{blue}%0~%f"
 }
 
 function git_prompt_info() {
@@ -52,24 +64,13 @@ function git_prompt_info() {
 
   if [[ -n $STATUS ]]; then
     GIT_PROMPT_COLOR="$ZSH_THEME_GIT_PROMPT_DIRTY"
-    GIT_DIRTY_STAR="*"
   else
     GIT_PROMPT_COLOR="$ZSH_THEME_GIT_PROMPT_CLEAN"
     unset GIT_DIRTY_STAR
   fi
 
-  echo "$GIT_PROMPT_COLOR$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$GIT_DIRTY_STAR$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$GIT_PROMPT_COLOR$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
-# set the git_prompt_status text
-ZSH_THEME_GIT_PROMPT_ADDED="$fg[cyan] added$reset_color"
-ZSH_THEME_GIT_PROMPT_UNMERGED="$fg[red] unmerged$reset_color"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="$fg[magenta] untracked$reset_color"
-ZSH_THEME_GIT_PROMPT_BEHIND="$fg[yellow] behind$reset_color"
-ZSH_THEME_GIT_PROMPT_AHEAD="$fg[green] ahead$reset_color"
-
-ZSH_THEME_GIT_PROMPT_SUFFIX="$reset_color"
-ZSH_THEME_GIT_PROMPT_CLEAN="$fg[cyan]"
-ZSH_THEME_GIT_PROMPT_CLEAN="$fg[red]"
 
 PROMPT='$(directory) $(git_prompt_info) $ '
 #---------------------------------------------
