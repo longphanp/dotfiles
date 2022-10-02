@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 #-----------Install Rosetta--------
-sudo softwareupdate --install-rosetta
+command -v pgrep oahd > /dev/null 2>&1 || sudo softwareupdate --install-rosetta
 
 #-----------Install xcode------------
 printf "\nInstall xcode ...\n"
