@@ -10,6 +10,9 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+# Disable the sound effects on boot
+sudo nvram StartupMute=%01
+
 #----------Dock--------
 # Autohide dock = true
 defaults write com.apple.dock "autohide" -bool "true" 
@@ -25,6 +28,8 @@ defaults write com.apple.dock "show-recents" -bool "false"
 
 # Minizize animation effect
 defaults write com.apple.dock "mineffect" -string "scale" 
+
+defaults write com.apple.dock "tilesize" -int 45
 
 #-------Screenshot--------
 # Disable shadow of screenshot
@@ -50,6 +55,9 @@ defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
 # Show path bar
 defaults write com.apple.finder "ShowPathbar" -bool "true" 
 
+# Show preview window
+defaults write $HOME/Library/Preferences/com.apple.finder ShowPreviewPane -bool "true"
+
 #---------Menubar-----------
 defaults write com.apple.systemuiserver menuExtras -array \
 "/System/Library/CoreServices/Menu Extras/AirPort.menu" \
@@ -62,11 +70,17 @@ defaults write com.apple.systemuiserver menuExtras -array \
 # Show Battery percentage
 defaults write com.apple.menuextra.battery ShowPercent -string YES
 
+# for Mac Monterey
+# Show bluetooth and battery
+defaults write $HOME/Library/ByHost/com.apple.controlcenter Battery -int 22
+defaults write $HOME/Library/ByHost/com.apple.controlcenter Bluetooth -int 2
+defaults write $HOME/Library/ByHost/com.apple.controlcenter BatteryShowPercentage -bool true
+
 #------------Functions---------
 # Disable the “Are you sure you want to open this application?” dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# go into computer sleep mode after 3330min
+# go into computer sleep mode after 30min
 sudo systemsetup -setcomputersleep 30
 
 # Disable smart quotes as they’re annoying when typing code
@@ -75,21 +89,24 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-#------------Trackpad, mouse, keyboard----
-# Trackpad: enable tap to click for this user and for the login screen
+# Disable auto-correct
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
+#-------Trackpad-------
+# Trackpad: enable tap to click for this user and for the login screen
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad ActuateDetents -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -bool 0
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write -g com.apple.trackpad.scaling 2
 
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-
-# Disable auto-correct
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+#-------Keyboard-------
+defaults write -g InitialKeyRepeat -int 10
+defaults write -g KeyRepeat -int 1
 
 #------------------------
 # Show the ~/Library folder
@@ -97,6 +114,11 @@ chflags nohidden ~/Library
 
 # Show the /Volumes folder
 sudo chflags nohidden /Volumes
+
+# Set language and location
+defaults write -g AppleLanguages -array "en" "vi"
+defaults write -g AppleLocale -string "vi_VN"
+sudo systemsetup  -settimezone "Asia/Ho_Chi_Minh" > /dev/null
 
 #----------Iterm2----------
 osascript <<EOD
@@ -140,41 +162,11 @@ open "./iterm_theme/everforest.itermcolors"
 # Don’t display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
-#----------Activity monitor---------
-# Show the main window when launching Activity Monitor
-defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+#------Sound-------
 
-# Visualize CPU usage in the Activity Monitor Dock icon
-defaults write com.apple.ActivityMonitor IconType -int 5
+defaults write "Apple Global Domain" com.apple.sound.beep.sound -string /System/Library/Sounds/Tink.aiff
 
-# Show all processes in Activity Monitor
-defaults write com.apple.ActivityMonitor ShowCategory -int 0
-
-# Sets columns for all tabs
-defaults write com.apple.ActivityMonitor "UserColumnsPerTab v5.0" -dict \
-    '0' '( Command, CPUUsage, CPUTime, Threads, PID, UID, Ports )' \
-    '1' '( Command, ResidentSize, Threads, Ports, PID, UID,  )' \
-    '2' '( Command, PowerScore, 12HRPower, AppSleep, UID, powerAssertion )' \
-    '3' '( Command, bytesWritten, bytesRead, Architecture, PID, UID, CPUUsage )' \
-    '4' '( Command, txBytes, rxBytes, PID, UID, txPackets, rxPackets, CPUUsage )'
-
-# Set sort column
-defaults write com.apple.ActivityMonitor UserColumnSortPerTab -dict \
-    '0' '{ direction = 0; sort = CPUUsage; }' \
-    '1' '{ direction = 0; sort = ResidentSize; }' \
-    '2' '{ direction = 0; sort = 12HRPower; }' \
-    '3' '{ direction = 0; sort = bytesWritten; }' \
-    '4' '{ direction = 0; sort = rxBytes; }'
-defaults write com.apple.ActivityMonitor SortDirection -int 0
-
-# Show Data in the Disk graph (instead of IO)
-defaults write com.apple.ActivityMonitor DiskGraphType -int 1
-
-# Show Data in the Network graph (instead of packets)
-defaults write com.apple.ActivityMonitor NetworkGraphType -int 1
-
-
-# ------------Mac App Store---------------
+# -----Mac App Store-------
 # Enable the WebKit Developer Tools in the Mac App Store
 defaults write com.apple.appstore WebKitDeveloperExtras -bool true
 
