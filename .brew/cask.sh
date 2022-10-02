@@ -4,6 +4,9 @@
 brew install --cask ccleaner
 brew install --cask evkey
 brew install --cask cloudflare-warp
+brew install --cask messenger
+brew install --cask topnotch
+brew install --cask rectangle
 
 # Browsers 
 brew install --cask google-chrome
