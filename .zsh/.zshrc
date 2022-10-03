@@ -38,7 +38,7 @@ ZSH_THEME_GIT_PROMPT_AHEAD="$fg[green] ahead$reset_color"
 ZSH_THEME_GIT_PROMPT_PREFIX="("
 ZSH_THEME_GIT_PROMPT_SUFFIX=")%f"
 ZSH_THEME_GIT_PROMPT_CLEAN="%F{cyan}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%F{red}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}"
 
 # current directory, two levels deep
 directory() {
