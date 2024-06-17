@@ -6,6 +6,10 @@ alias mv='mv -v'
 alias rm='rm -i -v'
 alias cp='cp -v'
 
+# ls
+alias ls='ls -F -G'
+alias ll='ls -la'
+
 # Typos
 alias brwe=brew 
 
@@ -13,8 +17,13 @@ alias hosts='sudo $EDITOR /etc/hosts'
 
 # Set python3
 alias python=python3
+alias pip=pip3
 
 # Networking
 alias wget="curl -O"
 
+# Git
+alias gs="git status"
 
+# Sops
+alias sops="sops --config <(echo '')"

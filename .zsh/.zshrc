@@ -1,4 +1,10 @@
 setopt PROMPT_SUBST
+unsetopt correct_all
+unsetopt correct
+
+unsetopt inc_append_history
+unsetopt share_history
+
 autoload -U colors && colors # Enable colors
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
@@ -8,7 +14,7 @@ DISABLE_AUTO_UPDATE="true"
 DISABLE_MAGIC_FUNCTIONS=true
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+#ENABLE_CORRECTION="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -37,12 +43,12 @@ ZSH_THEME_GIT_PROMPT_AHEAD="$fg[green] ahead$reset_color"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="("
 ZSH_THEME_GIT_PROMPT_SUFFIX=")%f"
-ZSH_THEME_GIT_PROMPT_CLEAN="%F{cyan}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}"
 
 # current directory, two levels deep
 directory() {
-   echo "%B%F{blue}%0~%f"
+   echo "%B%F{cyan}%0~%f%b"
 }
 
 function git_prompt_info() {
@@ -72,5 +78,16 @@ function git_prompt_info() {
   echo "$GIT_PROMPT_COLOR$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
-PROMPT='$(directory) $(git_prompt_info) $ '
+PROMPT='$(directory) $(git_prompt_info) %F{yellow}$%f '
 #---------------------------------------------
+
+[[ -d ~/.history ]] || mkdir  ~/.history
+[[ -d ~/.history ]] && chmod 0700 ~/.history
+HISTFILE=~/.history/history.$(date +%y%b%d-%H%M%S).$$
+# close any old history file by zeroing HISTFILESIZE
+HISTFILESIZE=0
+# then set HISTFILESIZE to a large value
+HISTFILESIZE=4096
+HISTSIZE=4096
+
+autoload -U +X bashcompinit && bashcompinit

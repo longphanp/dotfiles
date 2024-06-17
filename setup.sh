@@ -25,20 +25,23 @@ printf "\nCreate symlink ...\n"
 
 FILES_TO_SYMLINK=$(find . -type f -name ".*" -not -name .DS_Store -not -name .git -not -name .macos | sed -e 's|//|/|' | sed -e 's|./.|.|' | sort) 
 
-for file in ${FILES_TO_SYMLINK[@]}; do
+for file in "${FILES_TO_SYMLINK[@]}"; do
     srcFile="$(pwd)/${file}"
     desFile="$HOME/$(printf "%s" "$file" | sed "s/.*\/\(.*\)/\1/g")" 
     ln -fs "$srcFile" "$desFile"
 done
+
+# Java
+sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 #-------------Install brew----------
 printf "\nInstall brew ...\n"
 
 command -v brew >/dev/null 2>&1 || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || { echo "Install brew failed!"; exit 1; }
 
-#-------------Install brew----------
+#-------------Install brew packages----------
 printf "\nInstall brew packages ...\n"
-eval $(/opt/homebrew/bin/brew shellenv)
+eval "$(/opt/homebrew/bin/brew shellenv)"
 bash .brew/brew.sh || { echo "Install brew packages failed"; exit 1; }
 bash .brew/cask.sh || { echo "Install brew cask failed"; exit 1; }
 
@@ -47,10 +50,10 @@ bash .brew/cask.sh || { echo "Install brew cask failed"; exit 1; }
 printf "\nInstall oh my zsh ...\n"
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-fi
+    { sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; } <<<"n"
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+fi > /dev/null
 
 #------------Install nvm-------------
 printf "\nInstall nvm ...\n"
@@ -61,7 +64,7 @@ command -v nvm >/dev/null 2>&1 || curl -o- https://raw.githubusercontent.com/nvm
 printf "\nInstall vim plug ...\n"
 
 # Install vim plugins
-curl -fLo ${HOME}/.vim/autoload/plug.vim --create-dirs \
+curl -fLo "${HOME}/.vim/autoload/plug.vim" --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 printf "\nInstalling Vim plugins...\n"
@@ -73,10 +76,15 @@ printf "\nInstalling Vim Coc Extensions...\n"
 COC_EXTENSION_DIR=$HOME/.config/coc/extensions
 (cp ./.vim/coc/package.json "$COC_EXTENSION_DIR" && cd "$COC_EXTENSION_DIR" && yarn install)
 
+#------------Install tmux plugins------------------
+printf "\nInstall tmux plugins\n"
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+tmux source ~/.tmux.conf
+
 #-------------Change to zsh----------------
 # change shell to zsh
 chsh -s "$(command -v zsh)" || { echo "Failed to switch to zsh"; exit 1; }
-source "$HOME/.zprofile"
+[[ -f "$HOME/.zprofile" ]] &&  source "$HOME/.zprofile" 
 
 # Config macos
 sh .macos

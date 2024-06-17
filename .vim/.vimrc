@@ -23,6 +23,9 @@ set noswapfile
 " Turn off modelines
 set modelines=0
 
+" Remove insert newline delay
+set timeoutlen=500
+
 " Automatically wrap text that extends beyond the screen length.
 set wrap
 
@@ -32,7 +35,7 @@ imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 
 " Uncomment below to set the max textwidth. Use a value corresponding to the width of your screen.
-" set textwidth=79
+set textwidth=128
 "set formatoptions=tcqrn1
 set tabstop=4
 set shiftwidth=4
@@ -48,7 +51,9 @@ set scrolloff=5
 set backspace=indent,eol,start
 
 " Speed up scrolling in Vim
-set ttyfast
+set ttyfast 
+set ttyscroll=3
+set lazyredraw " to avoid scrolling problems
 
 " Status bar
 set laststatus=2
@@ -103,7 +108,13 @@ set clipboard=unnamed
 " Cycle search
 set wrapscan 
 
-"---------------Key bidding------------------
+" Minimal syntax highlight column
+set synmaxcol=256
+
+" Open manpage with vim
+runtime! ftplugin/man.vim
+
+"---------------Key bindings------------------
 :imap jj <Esc>
 
 let mapleader = " "
@@ -113,6 +124,9 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+nnoremap <leader>s :split<CR>
+nnoremap <leader>v :vsplit<CR>
 
 " Buffer navigation
 "nnoremap <C-i> :bn<Cr>
@@ -124,16 +138,32 @@ nnoremap <C-H> <C-W><C-H>
 " Turn off highlight search
 nnoremap <esc><esc> :noh<return><esc>
 
-" Paste text 
-inoremap <C-v> <C-r>0<ESC>
+" Disable ex mode and command history
+map q: <Nop>
+nnoremap Q <nop>
 
+" Make diff between 2 files
+"nnoremap <leader>d :windo diffthis<CR>
+
+nnoremap K <C-u>
+nnoremap J <C-d>
+
+" Make '^' to 0
+noremap <silent> <expr> ^ getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
+
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>
+
+nnoremap = <C-w>=
+
+nnoremap L $
+nnoremap H 0
+
+nnoremap <leader>t :term<CR>
 "----------------------------------------------
+" File indent
 
-" Automatically save and load folds
-"autocmd BufWinLeave *.* mkview
-"autocmd BufWinEnter *.* silent loadview"
-"
-"" For web dev
+" For web dev
 autocmd Filetype html setlocal ts=2 sw=2 sts=2 expandtab autoindent 
 autocmd Filetype javascript setlocal ts=2 sw=2 sts=2 expandtab autoindent
 autocmd Filetype typescript setlocal ts=2 sw=2 sts=2 expandtab autoindent
@@ -141,6 +171,7 @@ autocmd Filetype javascriptreact setlocal ts=2 sw=2 sts=2 expandtab autoindent
 autocmd Filetype typescriptreact setlocal ts=2 sw=2 sts=2 expandtab autoindent
 autocmd Filetype css setlocal ts=2 sw=2 sts=2 expandtab autoindent
 autocmd Filetype json setlocal ts=2 sw=2 sts=2 expandtab autoindent
+autocmd Filetype vue setlocal ts=2 sw=2 sts=2 expandtab autoindent 
 
 " Python PEP 8
 au BufNewFile,BufRead *.py
@@ -153,12 +184,17 @@ au BufNewFile,BufRead *.py
     \ set fileformat=unix
 
 "C, C++
-autocmd Filetype cpp setlocal ts=4 sw=4 sts=4 expandtab autoindent
-autocmd Filetype c setlocal ts=4 sw=4 sts=4 expandtab autoindent
+autocmd Filetype cpp setlocal ts=2 sw=2 sts=2 expandtab autoindent
+autocmd Filetype c setlocal ts=2 sw=2 sts=2 expandtab autoindent
 
+"Jenkins files
+augroup set_jenkins_groovy
+au!
+au BufNewFile,BufRead *.jenkinsfile,*.Jenkinsfile,Jenkinsfile,jenkinsfile setf groovy
+augroup END
 
+"---------------------------------------------------
 "Flagging Unnecessary Whitespace
-"highlight BadWhitespace ctermbg=red guibg=darkred
 "au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 " For plug-ins to load correctly.
@@ -176,13 +212,12 @@ if exists('+termguicolors')
   "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
-"let g:everforest_better_performance = 1
-"let g:everforest_background = 'hard'
-"let g:gruvbox_contrast_light = 'hard'
+
 colorscheme everforest
-
+let g:everforest_disable_italic_comment = 1
+let g:everforest_background = 'soft'
+let g:everforest_better_performance = 0
 set background=light
-
 
 " Set status line
 "function! g:StatuslineMode()
@@ -213,11 +248,11 @@ let g:coc_disable_startup_warning = 1
 
 nmap <leader>cd <Plug>(coc-definition)
 nmap <leader>cr <Plug>(coc-references)
-nmap <leader> cy <Plug>(coc-type-definition)
-nmap <leader> ci <Plug>(coc-implementation)
+nmap <leader>cy <Plug>(coc-type-definition)
+nmap <leader>ci <Plug>(coc-implementation)
 nmap <leader>rn <Plug>(coc-rename)
 nmap <leader>do <Plug>(coc-codeaction)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> <leader>ck :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -253,19 +288,16 @@ hi CocWarningHighlight term=underline cterm=underline ctermfg=136 gui=underline 
 " Intent line
 let g:indentLine_char_list = ['|']
 let g:indentLine_setConceal = 2
-
-" NERDTree shortcut
-map <C-n> :NERDTreeToggle<CR>
-
-let NERDTreeShowLineNumbers=1
-" make sure relative line numbers are used
-autocmd FileType nerdtree setlocal relativenumber
+let g:vim_json_conceal=0
 
 " Commenter
 nmap // <plug>NERDCommenterToggle
 vmap // <plug>NERDCommenterToggle
 nmap /. <plug>NERDCommenterMinimal
 vmap /. <plug>NERDCommenterMinimal
+
+let g:NERDSpaceDelims = 4
+let g:NERDCreateDefaultMappings = 0
 
 " Fugitive shortcut
 nmap <leader>gs :G<CR>
@@ -275,8 +307,12 @@ nmap <leader>gf :diffget //2<CR>
 nmap <leader>gj :diffget //3<CR>
 nmap <leader>gb :G blame<CR>
 
+" List commit for current file
+nmap <leader>gc :0Gclog<CR>
+nmap <leader>gp :Git log -p --follow -- % <CR>
+
 " Git blame
-nnoremap <Leader>s :<C-u>call gitblame#echo()<CR>
+nnoremap <Leader>b :<C-u>call gitblame#echo()<CR>
 
 " vim-ripgrep
 if executable('rg')
@@ -287,7 +323,7 @@ endif
 nnoremap <expr> <C-p> (len(system('git rev-parse')) ? ':Files' : ':GFiles --exclude-standard --others --cached')."\<cr>"
 nnoremap <silent> <C-b> :Buffers<CR>
 nnoremap <silent> <C-f> :Files<CR>
-nnoremap <silent> <C-g> :Rg<CR>
+nnoremap <silent> <C-g> :Rg 
 nnoremap <silent> \ :BLines<CR>
 
 " Ripgrep advanced
@@ -300,6 +336,24 @@ function! RipgrepFzf(query, fullscreen)
 endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+"FZF Buffer Delete
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
 
 " Undotree
 nnoremap <leader>u : UndotreeShow<CR>
@@ -319,4 +373,18 @@ map g/ <Plug>(incsearch-fuzzy-stay)
 
 " Vim repeat
 silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+
+" Dirvish
+nnoremap <C-n> :Dirvish <CR>
+
+let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,'
+
+augroup dirvish_config
+  autocmd!
+  autocmd FileType dirvish silent! unmap <buffer> <C-p>
+augroup END
+
+" Vim-terraform
+let g:terraform_fmt_on_save=1
+let g:terraform_align=1
 

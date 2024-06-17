@@ -1,0 +1,13 @@
+# Docker
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
+# Aws
+complete -C "$(which aws_completer)" aws
+
+# Terraform
+complete -o nospace -C "$(which terraform)" terraform
+
+# Kubernetes
+source <(kubectl completion zsh)
+
+

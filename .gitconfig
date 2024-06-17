@@ -8,4 +8,7 @@
 	smudge = git-lfs smudge -- %f
 [core]
     editor = vim
+	ignorecase = false
 
+[pull]
+	rebase = true

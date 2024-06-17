@@ -3,14 +3,16 @@ call plug#begin('~/.vim/plugged')
 " Intent line
 Plug 'Yggdroot/indentLine'
 
-"Fugitive Vim Github Wrapper
+" File manager
+Plug 'justinmk/vim-dirvish'
+Plug 'roginfarrer/vim-dirvish-dovish', {'branch': 'main'}
+Plug 'mcchrish/nnn.vim'
+
+" Git plugins
 Plug 'tpope/vim-fugitive'
-
-" Git blame
+Plug 'rbong/vim-flog'
+Plug 'junegunn/gv.vim'
 Plug 'zivyangll/git-blame.vim'
-
-" File manage
-Plug 'scrooloose/nerdtree'
 
 " Commenter
 Plug 'scrooloose/nerdcommenter'
@@ -30,6 +32,9 @@ Plug 'haya14busa/incsearch-fuzzy.vim'
 " Auto complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'} 
 Plug 'kevinoid/vim-jsonc'
+Plug 'artur-shaik/vim-javacomplete2'
+Plug 'hashivim/vim-terraform'
+Plug 'martinda/Jenkinsfile-vim-syntax'
 
 "Vim scheme
 Plug 'vv9k/vim-github-dark'
@@ -48,12 +53,20 @@ Plug 'vim-airline/vim-airline'
 "Surround
 Plug 'tpope/vim-surround'
 
-" C++ systax
+" Syntax highlight
 Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'cespare/vim-toml', { 'branch': 'main' }
 
 " Switch buffer
 Plug 'ton/vim-bufsurf'
 
 " Repeat plugin
 Plug 'tpope/vim-repeat'
+
+" Registers
+Plug 'junegunn/vim-peekaboo'
+
+" Tmux
+Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
